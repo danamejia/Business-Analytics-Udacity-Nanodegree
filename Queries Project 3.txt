@@ -1,0 +1,64 @@
+﻿/*Query 1:- query used for first insight*/
+THE TOP 10 COUNTRIES WITH MOST SALES TRACKS
+
+SELECT Customer.Country, count(track.name) AS Total_track
+  FROM Track
+  JOIN Customer
+    ON Customer.CustomerId = Invoice.CustomerId
+  JOIN Invoice
+    ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+JOIN InvoiceLine
+ON InvoiceLine.TrackId = track.TrackId
+    GROUP BY Customer.Country
+  ORDER BY Total_track DESC
+  LIMIT 10;
+
+﻿/*Query 2:- query used for second insight*/
+TOTAL TOP 10  MOST SELLING ALBUMS
+
+SELECT Album.Title,SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity) AS Total_sales_album
+  FROM InvoiceLine
+  JOIN Album
+    ON Album.AlbumId = TRACK.AlbumId 
+  JOIN Track
+    ON Track.TrackId = InvoiceLine.TrackId
+    GROUP BY Album.Title
+  ORDER BY Total_sales_album DESC
+  LIMIT 10;
+
+﻿/*Query 3:- query used for third insight*/
+TOP 10 ARTISTS WITH MORE SONGS ON LATIN GENRE
+
+SELECT Artist.name, count(Track.Name) AS Number_tracks
+  FROM Artist
+  JOIN Album
+    ON Album.ArtistId = Artist.ArtistId
+  JOIN Track
+  ON Track.AlbumId = Album.AlbumId
+  JOIN Genre
+  ON Genre.GenreId = Track.GenreId
+  WHERE genre.Name = "Latin"
+  GROUP BY Artist.Name
+  ORDER BY Number_tracks DESC
+  LIMIT 10;
+
+﻿/*Query 4:- query used for fourth insight*/
+
+THE TOP 10 ARTISTS WITH HIGHEST TOTAL SALES ON METAL GENRE
+
+SELECT Artist.Name, SUM(InvoiceLine.UnitPrice * InvoiceLine.Quantity) AS total_sales
+FROM Invoice
+JOIN Artist
+  ON Artist.ArtistId = Album.ArtistId
+  JOIN Album
+  ON Album.AlbumId = Track.AlbumId
+  JOIN Track
+  ON InvoiceLine.TrackId = Track.TrackId
+  JOIN InvoiceLine
+  ON InvoiceLine.InvoiceId = Invoice.InvoiceId
+  JOIN Genre
+ ON genre.GenreId = Track.GenreId
+ WHERE genre.Name = "Metal"
+ GROUP BY Artist.name
+ORDER BY total_Sales DESC
+LIMIT 10;
